@@ -4,7 +4,10 @@ main: com.nekozouneko.virtualchest.VirtualChest
 api-version: 1.16
 authors: [ Taitaitatata ]
 description: 仮想チェスト機能を管理するプラグイン
-website: https://nekozouneko.ddns.net
+website: https://www.nekozouneko.net
+
+softdepend:
+  - Vault
 
 commands:
   virtualchest:

@@ -1,7 +1,6 @@
 package com.nekozouneko.virtualchest.listener;
 
 import com.google.gson.Gson;
-import com.nekozouneko.nplib.chat.ChatCode;
 import com.nekozouneko.virtualchest.VirtualChest;
 import com.nekozouneko.virtualchest.files.SaveData;
 import com.nekozouneko.virtualchest.files.VChestData;

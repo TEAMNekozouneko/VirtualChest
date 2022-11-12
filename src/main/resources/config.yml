@@ -1,0 +1,10 @@
+# 購入タイプ
+# - vault > Vaultで支払い
+# - ingot > 金インゴットで支払い
+buy-type: vault
+
+vault:
+    price: 5000
+
+ingot:
+    price: 32

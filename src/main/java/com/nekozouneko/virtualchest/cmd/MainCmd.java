@@ -10,6 +10,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.*;
@@ -171,38 +172,50 @@ public class MainCmd implements CommandExecutor, TabCompleter {
         }
 
         SaveData data = gson.fromJson(reader, SaveData.class);
-
         if (data == null) {
             data = new SaveData(player.getUniqueId().toString());
         }
 
-        long ingots = 0;
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null && item.getType() == Material.GOLD_INGOT) {
-                ingots += item.getAmount();
-            }
-        }
+        if (!(instance.getConfig().getString("buy-type").equalsIgnoreCase("vault"))) {
 
-        int buy = 32;
-        int buy2 = 0;
-
-        if (ingots >= 32) {
+            long ingots = 0;
             for (ItemStack item : player.getInventory().getContents()) {
-                if (item != null && item.getType() == Material.GOLD_INGOT && !(buy == 0)) {
-                    if (item.getAmount() >= buy) {
-                        buy2 = item.getAmount() - buy;
-                        buy = 0;
-                        item.setAmount(buy2);
-                    } else {
-                        buy2 = buy - item.getAmount();
-                        buy -= buy2;
-                        item.setAmount(0);
-                    }
+                if (item != null && item.getType() == Material.GOLD_INGOT) {
+                    ingots += item.getAmount();
                 }
             }
+
+            int buy = 32;
+            int buy2 = 0;
+
+            if (ingots >= 32) {
+                for (ItemStack item : player.getInventory().getContents()) {
+                    if (item != null && item.getType() == Material.GOLD_INGOT && !(buy == 0)) {
+                        if (item.getAmount() >= buy) {
+                            buy2 = item.getAmount() - buy;
+                            buy = 0;
+                            item.setAmount(buy2);
+                        } else {
+                            buy2 = buy - item.getAmount();
+                            buy -= buy2;
+                            item.setAmount(0);
+                        }
+                    }
+                }
+            } else {
+                s.sendMessage(ChatColor.RED + "金インゴットが不足しています。");
+                return;
+            }
         } else {
-            s.sendMessage(ChatColor.RED + "金インゴットが不足しています。");
-            return;
+            Economy eco = VirtualChest.getVE();
+            double price = instance.getConfig().getDouble("vault.price");
+
+            if (eco.getBalance(player) >= price) {
+                eco.withdrawPlayer(player, price);
+            } else {
+                player.sendMessage("> §a仮想チェスト §c最低でも" + price + eco.currencyNameSingular()+"必要です");
+                return;
+            }
         }
 
         Inventory emptyChest = Bukkit.createInventory(null, 27, "VirtualChest-temp");
