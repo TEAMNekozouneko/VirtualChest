@@ -1,0 +1,13 @@
+name: VirtualChest
+version: '${project.version}'
+main: com.nekozouneko.virtualchest.VirtualChest
+api-version: 1.16
+authors: [ Taitaitatata ]
+description: 仮想チェスト機能を管理するプラグイン
+website: https://nekozouneko.ddns.net
+
+commands:
+  virtualchest:
+    aliases: ["vc", "vchest"]
+    description: "仮想チェストを管理するコマンドです。"
+    usage: '/<command> [<?|add|menu|help|list|menu>] <args>'
